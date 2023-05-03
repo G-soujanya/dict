@@ -1,0 +1,127 @@
+<html lang="en">
+
+<head>
+    <title>Dictonary</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.css">
+    <style>
+        *{
+    padding: 0;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+#container{
+    width:600px;
+    height:300px;
+    margin-top: 200px;
+    margin-left: 400px;
+}
+
+#t{
+    margin-top: 30px;
+    padding: 10px;
+    width:70%;
+    margin-left: 5px;
+    margin-bottom: 40px;
+}
+#btn{
+    background-color: blue;
+    padding: 10px;
+    color: white;
+    width: 20%;
+    margin-bottom: 40px;
+}
+#s{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+#c{
+    display: inline-flex;
+    margin-left: 130px;
+    color: rgba(10,10,10,0.6);
+}
+#word-mean{
+    margin: 10px;
+    margin-left: 20px;
+}
+#word-exmaple{
+    margin: 10px;
+    margin-left: 20px;
+    font-style: italic;
+    border-left: 2px solid #ae9cff;
+}
+
+    </style>
+</head>
+
+<body style="background-color:blueviolet">
+    <marquee style="background-color: aliceblue;margin-top: 10px;"><h1>Dictionary</h1></marquee>
+    <div id="container" style="background-color:white">
+        <div id="word">
+            <input type="text" placeholder="search word meaning here......" id="t">
+            <button id="btn">search</button>
+            <div id="result">
+                <div id="s">
+                    <h3>sample</h3>
+                    <button>
+                        <i class="fa fa-volume-up" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div id="c">
+                    <p>pos</p>
+                    <p>/sample/</p>
+                </div>
+                <p id="word-mean">
+                    dummy data is benign information that does not contain any useful data, but serves to reserve space where re
+                </p>
+                <p id="word-exmaple">
+                    dummy data is benign information that does not contain any useful data, but serves to reserve space where r
+                </p>
+            </div>
+        </div>
+    </div>
+   <audio id="myAudio">
+  <source src="" type="audio/ogg" id="sound">
+</audio>
+
+<script>const url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+    const result = document.getElementById("result");
+    const sound1 = document.getElementById("sound");
+    const sound = document.getElementById("myAudio");
+    const btn = document.getElementById("btn");
+    btn.addEventListener("click", () => {
+        const inword = document.getElementById("t").value;
+        fetch(`${url}${inword}`)
+            .then((response) => response.json())
+            .then((data) => {
+                sound1.setAttribute("src", `https:${data[0].phonetics[0].audio}`);
+                result.innerHTML = `
+            <div id="result">
+                <div id="s">
+                    <h3>${inword}</h3>
+                    <button onclick="ps()">
+                        <i class="fa fa-volume-up" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div id="c">
+                    <p>${data[0].meanings[0].partOfSpeech}</p>
+                    <p>/${data[0].phonetic}/</p>
+                </div>
+                <p id="word-mean">
+                   ${data[0].meanings[0].definitions[0].definition}
+                </p>
+                <p id="word-exmaple">
+                ${data[0].meanings[0].definitions[0].example || ""}
+                </p>`;
+            })
+            .catch(() => {
+                result.innerHTML = `<h3 id="error">could not find the error</h3>`;
+            });
+    });
+    function ps() {
+        console.log(sound);
+        sound.play();
+    } </script>
+</body>
+
+</html>
